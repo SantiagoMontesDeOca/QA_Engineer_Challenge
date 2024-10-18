@@ -4,42 +4,46 @@ describe('Nicolas Cage IMDb Test', () => {
     { width: 1280, height: 800 }, // Desktop
     { width: 1024, height: 768 }, // Tablet
     { width: 768, height: 1024 }, // Tablet in portrait
-    { width: 375, height: 667 },   // Mobile (iPhone 6/7/8) // I maybe need to change search input for cy.get('#suggestion-search')
-    { width: 414, height: 896 },   // Mobile (iPhone XR/11) // I maybe need to change search input for cy.get('#suggestion-search')
-    { width: 360, height: 640 }    // Mobile (Android) // I maybe need to change search input for cy.get('#suggestion-search')
+    { width: 375, height: 667 },   // Mobile (iPhone 6/7/8)
+    { width: 414, height: 896 },   // Mobile (iPhone XR/11)
+    { width: 360, height: 640 }    // Mobile (Android)
   ];
 
   sizes.forEach(size => {
+    // Hook que se ejecuta antes de cada prueba
+    beforeEach(() => {
+      cy.clearCookies(); // Limpia las cookies
+      cy.clearLocalStorage(); // Limpia el almacenamiento local
+      cy.visit('/?language=en'); // Visita el sitio web en inglés
+
+      // Cambia el tamaño de la ventana para cada prueba
+      cy.viewport(size.width, size.height);
+
+      // Aceptar el banner de consentimiento
+      cy.get('[data-testid="consent-banner"]') // Selecciona el banner de consentimiento
+        .find('button') // Busca un botón dentro del banner
+        .contains('Decline') // Asegura que contenga el texto "Decline"
+        .should('be.visible') // Asegura que el botón sea visible
+        .click(); // Hace clic en el botón
+    });
+
     it(`Search and access the completed movie on ${size.width}x${size.height}`, () => {
-      cy.viewport(size.width, size.height); // Change the window size
-
-      // Clean cookies and local storage.
-      cy.clearCookies();
-      cy.clearLocalStorage();
-      cy.visit('/?language=en'); // Visit website in English
-
-      cy.get('[data-testid="consent-banner"]') // Select the consent banner
-        .find('button') // Look for a button inside the banner
-        .contains('Decline') // Ensure it contains the text "Decline"
-        .should('be.visible') // Ensure the button is visible
-        .click(); // Click on the button
-
       // Search for "Nicolas Cage" in the search field
       cy.get('input[placeholder="Search IMDb"]').type('Nicolas Cage');
 
       // Wait for the search results to appear and click on the first one
-      cy.get('[data-testid="search-result--const"]') // Used to select the search result
-        .contains('Nicolas Cage') // Searches for the text "Nicolas Cage"
-        .should('exist') // Ensures that the element exists in the DOM
-        .and('be.visible') // Ensures that the element is visible
-        .click(); // Clicks on the element
+      cy.get('[data-testid="search-result--const"]') // Selecciona el resultado de búsqueda
+        .contains('Nicolas Cage') // Busca el texto "Nicolas Cage"
+        .should('exist') // Asegura que el elemento exista en el DOM
+        .and('be.visible') // Asegura que el elemento sea visible
+        .click(); // Hace clic en el elemento
 
       // Go to the "Upcoming" tab in the credits section
       cy.get('[data-testid="accordion-item-actor-upcoming-projects"]').should('exist').click();
 
       // Select the first movie with the "Completed" status
       cy.get('[data-testid="unrel_cred_actor_1"] > .ipc-metadata-list-summary-item__c > .ipc-metadata-list-summary-item__tc > .ipc-metadata-list-summary-item__stl')
-      //.contains('Completed','Completada') // I have an issue related to languages here in order to Searches for the text "Completed"
+      //.contains('Completed','Completada') // Problema relacionado con idiomas
       .click();
       
       // Verify that the URL contains "/title/"
