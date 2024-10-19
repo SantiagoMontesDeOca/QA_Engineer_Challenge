@@ -3,7 +3,7 @@ describe('Nicolas Cage IMDb Test', () => {
     { width: 1280, height: 800 }, // Desktop
     { width: 1024, height: 768 }, // Tablet
     { width: 768, height: 1024 }, // Tablet en modo retrato
-/*  Create a new cy.get('input[placeholder="Search IMDb"]') for this zies:
+/*  Create a new cy.get('input[placeholder="Search IMDb"]') for these sizes:
     { width: 375, height: 667 },   // Móvil (iPhone 6/7/8)
     { width: 414, height: 896 },   // Móvil (iPhone XR/11)
     { width: 360, height: 640 }    // Móvil (Android)
