@@ -1,5 +1,5 @@
 # QA_Engineer_Challenge
-A challenge for a QA Engineer's position.
+## A challenge for a QA Engineer's position.  
 To run the tests directly in your console, please type this:  
 **npm run test:chrome && npm run test:firefox**  
 **Test Automation's Summary**:
